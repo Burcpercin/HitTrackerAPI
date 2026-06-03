@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using HitTrackerAPI.Services;
+using HitTrackerAPI.DTOs;
 
 namespace HitTrackerAPI.Controllers
 {
@@ -20,19 +20,7 @@ namespace HitTrackerAPI.Controllers
         private int GetUserId() =>
             int.Parse(User.FindFirst("userId")!.Value);
 
-        public record CreateProgramRequest(
-            string Name,
-            string Goal,
-            int DaysPerWeek
-        );
-
-        public record AddExerciseRequest(
-            int ExerciseId,
-            int DayOfWeek,
-            int Sets,
-            int TargetReps
-        );
-
+        /// <summary>Get all programs for logged in user</summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -40,17 +28,27 @@ namespace HitTrackerAPI.Controllers
             return Ok(programs);
         }
 
+        /// <summary>Get program by ID with all exercises</summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var program = await _service.GetByIdAsync(id);
-            if (program == null) return NotFound(new { error = "Program not found" });
+            if (program == null)
+                return NotFound(new { error = "Program not found" });
             return Ok(program);
         }
 
+        /// <summary>Create a new workout program</summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProgramRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var program = await _service.CreateAsync(
@@ -64,6 +62,7 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Delete a program</summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -78,6 +77,7 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Set program as active</summary>
         [HttpPatch("{id}/activate")]
         public async Task<IActionResult> Activate(int id)
         {
@@ -92,10 +92,18 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Add exercise to program</summary>
         [HttpPost("{id}/exercises")]
         public async Task<IActionResult> AddExercise(
             int id, [FromBody] AddExerciseRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var entry = await _service.AddExerciseAsync(
@@ -109,6 +117,7 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Remove exercise from program</summary>
         [HttpDelete("{id}/exercises/{entryId}")]
         public async Task<IActionResult> RemoveExercise(int id, int entryId)
         {

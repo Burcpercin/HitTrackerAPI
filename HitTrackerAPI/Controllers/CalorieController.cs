@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using HitTrackerAPI.Services;
 using HitTrackerAPI.Repositories;
+using HitTrackerAPI.DTOs;
 
 namespace HitTrackerAPI.Controllers
 {
@@ -25,17 +25,17 @@ namespace HitTrackerAPI.Controllers
         private int GetUserId() =>
             int.Parse(User.FindFirst("userId")!.Value);
 
-        public record ProfileRequest(
-            DateTime BirthDate,
-            float WeightKg,
-            float HeightCm,
-            string Gender,
-            string ActivityLevel
-        );
-
+        /// <summary>Save user profile and get calorie report</summary>
         [HttpPost("profile")]
         public async Task<IActionResult> SaveProfile([FromBody] ProfileRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var profile = new Models.UserProfile
@@ -57,6 +57,7 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Get saved profile with calorie report</summary>
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile([FromQuery] string goal = "strength")
         {

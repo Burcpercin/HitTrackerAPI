@@ -87,6 +87,13 @@ namespace HitTrackerAPI.Data
                 .WithMany()
                 .HasForeignKey(se => se.ExerciseId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // --- YENİ EKLENEN KISIM ---
+            // Quote — text unique
+            modelBuilder.Entity<Quote>()
+                .HasIndex(q => q.Text)
+                .IsUnique();
+            // --------------------------
         }
     }
 }

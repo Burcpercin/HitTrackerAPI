@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using HitTrackerAPI.Services;
+using HitTrackerAPI.DTOs;
 
 namespace HitTrackerAPI.Controllers
 {
@@ -19,15 +20,7 @@ namespace HitTrackerAPI.Controllers
         private int GetUserId() =>
             int.Parse(User.FindFirst("userId")!.Value);
 
-        public record CreateSessionRequest(DateTime SessionDate, int? ProgramId);
-
-        public record LogExerciseRequest(
-            int ExerciseId,
-            float WeightKg,
-            int Reps,
-            bool ReachedFailure
-        );
-
+        /// <summary>Get all sessions for logged in user</summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -35,17 +28,27 @@ namespace HitTrackerAPI.Controllers
             return Ok(sessions);
         }
 
+        /// <summary>Get session by ID with all exercises</summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var session = await _service.GetByIdAsync(id);
-            if (session == null) return NotFound(new { error = "Session not found" });
+            if (session == null)
+                return NotFound(new { error = "Session not found" });
             return Ok(session);
         }
 
+        /// <summary>Create a new workout session</summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSessionRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var session = await _service.CreateAsync(
@@ -59,6 +62,7 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Delete a session</summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -73,10 +77,18 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Log an exercise to a session</summary>
         [HttpPost("{id}/exercises")]
         public async Task<IActionResult> LogExercise(
             int id, [FromBody] LogExerciseRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var entry = await _service.LogExerciseAsync(

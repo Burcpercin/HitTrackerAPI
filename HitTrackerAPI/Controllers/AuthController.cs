@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using HitTrackerAPI.Services;
+using HitTrackerAPI.DTOs;
 
 namespace HitTrackerAPI.Controllers
 {
@@ -14,21 +15,17 @@ namespace HitTrackerAPI.Controllers
             _authService = authService;
         }
 
-        public record RegisterRequest(string Username, string Email, string Password);
-        public record LoginRequest(string Email, string Password);
-
+        /// <summary>Register a new user</summary>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest req)
         {
-            if (string.IsNullOrWhiteSpace(req.Username) || req.Username.Length < 3)
-                return BadRequest(new { error = "Username min 3 chars" });
-
-            if (string.IsNullOrWhiteSpace(req.Email) || !req.Email.Contains("@"))
-                return BadRequest(new { error = "Invalid email" });
-
-            if (string.IsNullOrWhiteSpace(req.Password) || req.Password.Length < 6)
-                return BadRequest(new { error = "Password min 6 chars" });
-
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var (user, token) = await _authService.RegisterAsync(
@@ -46,12 +43,17 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Login with email and password</summary>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest req)
         {
-            if (string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.Password))
-                return BadRequest(new { error = "Please fill in all fields" });
-
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var (user, token) = await _authService.LoginAsync(req.Email, req.Password);

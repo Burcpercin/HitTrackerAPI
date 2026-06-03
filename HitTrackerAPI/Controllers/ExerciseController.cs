@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using HitTrackerAPI.Services;
+using HitTrackerAPI.DTOs;
 
 namespace HitTrackerAPI.Controllers
 {
@@ -21,21 +21,7 @@ namespace HitTrackerAPI.Controllers
         private int GetUserId() =>
             int.Parse(User.FindFirst("userId")!.Value);
 
-        public record CreateExerciseRequest(
-            string Name,
-            string MuscleGroup,
-            string? Description,
-            int RequiredRestDays,
-            string? Equipment
-        );
-
-        public record UpdateExerciseRequest(
-            string Name,
-            string MuscleGroup,
-            string? Description,
-            int RequiredRestDays
-        );
-
+        /// <summary>Get all exercises</summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -43,17 +29,27 @@ namespace HitTrackerAPI.Controllers
             return Ok(exercises);
         }
 
+        /// <summary>Get exercise by ID</summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var exercise = await _service.GetByIdAsync(id);
-            if (exercise == null) return NotFound(new { error = "Exercise not found" });
+            if (exercise == null)
+                return NotFound(new { error = "Exercise not found" });
             return Ok(exercise);
         }
 
+        /// <summary>Create a custom exercise</summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateExerciseRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var exercise = await _service.CreateAsync(
@@ -68,9 +64,17 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Update a custom exercise</summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateExerciseRequest req)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             try
             {
                 var exercise = await _service.UpdateAsync(
@@ -85,6 +89,7 @@ namespace HitTrackerAPI.Controllers
             }
         }
 
+        /// <summary>Delete a custom exercise</summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
