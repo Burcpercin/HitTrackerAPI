@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="HitTrackerAPI.Tests/HitTrackerAPI.Tests.csproj" />
+  <Project Path="HitTrackerAPI/HitTrackerAPI.csproj" />
+</Solution>
