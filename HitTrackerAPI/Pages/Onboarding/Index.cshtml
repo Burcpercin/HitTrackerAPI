@@ -1,0 +1,114 @@
+@page
+@model HitTrackerAPI.Pages.Onboarding.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Setup Profile";
+}
+
+<div id="onboarding-view" class="view">
+    <div class="onboarding-wrap">
+        <div class="onboarding-card">
+            <div class="onboarding-header">
+                <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+                <p class="step-label">Step <span id="step-current">1</span> of 5</p>
+            </div>
+            <div class="ob-step" id="step-1">
+                <h2>Personal Info</h2>
+                <p class="step-desc">Let's start with the basics</p>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <div class="input-wrap">
+                        <i data-lucide="calendar"></i>
+                        <input type="date" id="ob-birthdate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="choice-grid">
+                        <button class="choice-card" onclick="selectChoice('gender','male',this)">
+                            <i data-lucide="user"></i><span>Male</span>
+                        </button>
+                        <button class="choice-card" onclick="selectChoice('gender','female',this)">
+                            <i data-lucide="user"></i><span>Female</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="ob-step hidden" id="step-2">
+                <h2>Measurements</h2>
+                <p class="step-desc">Your physical stats</p>
+                <div class="form-group">
+                    <label>Height (cm)</label>
+                    <div class="input-wrap">
+                        <i data-lucide="ruler"></i>
+                        <input type="number" id="ob-height" placeholder="175">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <div class="input-wrap">
+                        <i data-lucide="activity"></i>
+                        <input type="number" id="ob-weight" placeholder="80" step="0.1">
+                    </div>
+                </div>
+            </div>
+            <div class="ob-step hidden" id="step-3">
+                <h2>Activity Level</h2>
+                <p class="step-desc">How active are you currently?</p>
+                <div class="activity-grid">
+                    <button class="activity-card" onclick="selectChoice('activity','sedentary',this)">
+                        <i data-lucide="armchair"></i><strong>Sedentary</strong><small>Desk job</small>
+                    </button>
+                    <button class="activity-card" onclick="selectChoice('activity','light',this)">
+                        <i data-lucide="footprints"></i><strong>Light</strong><small>1-3 days/week</small>
+                    </button>
+                    <button class="activity-card" onclick="selectChoice('activity','moderate',this)">
+                        <i data-lucide="activity"></i><strong>Moderate</strong><small>3-5 days/week</small>
+                    </button>
+                    <button class="activity-card" onclick="selectChoice('activity','active',this)">
+                        <i data-lucide="dumbbell"></i><strong>Active</strong><small>6-7 days/week</small>
+                    </button>
+                    <button class="activity-card" onclick="selectChoice('activity','very_active',this)">
+                        <i data-lucide="flame"></i><strong>Very Active</strong><small>Athlete level</small>
+                    </button>
+                </div>
+            </div>
+            <div class="ob-step hidden" id="step-4">
+                <h2>Your Goal</h2>
+                <p class="step-desc">What do you want to achieve?</p>
+                <div class="goal-grid">
+                    <button class="goal-card" onclick="selectChoice('goal','muscle_gain',this)">
+                        <i data-lucide="dumbbell"></i><strong>Build Muscle</strong><small>Gain mass</small>
+                    </button>
+                    <button class="goal-card" onclick="selectChoice('goal','fat_loss',this)">
+                        <i data-lucide="flame"></i><strong>Burn Fat</strong><small>Lose body fat</small>
+                    </button>
+                    <button class="goal-card" onclick="selectChoice('goal','strength',this)">
+                        <i data-lucide="trending-up"></i><strong>Get Stronger</strong><small>Pure strength</small>
+                    </button>
+                    <button class="goal-card" onclick="selectChoice('goal','endurance',this)">
+                        <i data-lucide="heart-pulse"></i><strong>Endurance</strong><small>Conditioning</small>
+                    </button>
+                </div>
+            </div>
+            <div class="ob-step hidden" id="step-5">
+                <h2>Your Summary</h2>
+                <p class="step-desc">Looking good!</p>
+                <div id="profile-summary" class="summary-grid"></div>
+                <div id="calorie-preview" class="calorie-card"></div>
+            </div>
+            <div id="onboarding-error" class="error-msg hidden"></div>
+            <div class="ob-nav">
+                <button id="ob-back" class="btn-secondary hidden" onclick="obBack()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                <button id="ob-next" class="btn-primary" onclick="obNext()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+                <button id="ob-finish" class="btn-primary hidden" onclick="obFinish()">
+                    Start Training <i data-lucide="zap"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

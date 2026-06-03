@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 namespace HitTrackerAPI.Models
 {
     public class WorkoutSession
@@ -10,7 +14,9 @@ namespace HitTrackerAPI.Models
         public int? ProgramId { get; set; }
 
         // Navigation
+        [JsonIgnore]
         public User User { get; set; } = null!;
+        
         public WorkoutProgram? Program { get; set; }
         public ICollection<SessionExercise> Exercises { get; set; } = new List<SessionExercise>();
     }

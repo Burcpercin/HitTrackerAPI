@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace HitTrackerAPI.Models
 {
     public class ProgramExercise
@@ -10,8 +12,9 @@ namespace HitTrackerAPI.Models
         public int TargetReps { get; set; }
         public string? Notes { get; set; }
 
-        // Navigation
-        public WorkoutProgram Program { get; set; } = null!;
-        public Exercise Exercise { get; set; } = null!;
+        [JsonIgnore]
+        public WorkoutProgram? Program { get; set; }
+        
+        public Exercise? Exercise { get; set; }  // Exercise bilgisini frontend görsün
     }
 }

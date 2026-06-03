@@ -1,0 +1,51 @@
+@page
+@model HitTrackerAPI.Pages.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Dashboard";
+}
+
+<div id="dashboard-view" class="view">
+    <div class="container">
+        <div class="dash-header">
+            <h1>Welcome, <span id="dash-username"></span></h1>
+            <p class="dash-sub">Ready to train with maximum intensity?</p>
+        </div>
+        <div id="daily-quote" class="quote-card"></div>
+        <div class="stats-row">
+            <div class="stat-card">
+                <i data-lucide="calendar-check"></i>
+                <div><span class="stat-num" id="stat-sessions">0</span><span class="stat-lbl">Sessions</span></div>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="dumbbell"></i>
+                <div><span class="stat-num" id="stat-exercises">0</span><span class="stat-lbl">Exercises</span></div>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="flame"></i>
+                <div><span class="stat-num" id="stat-calories">—</span><span class="stat-lbl">Daily kcal</span></div>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="clipboard-list"></i>
+                <div><span class="stat-num" id="stat-programs">0</span><span class="stat-lbl">Programs</span></div>
+            </div>
+        </div>
+        <div id="calorie-widget" class="calorie-widget hidden"></div>
+        <div class="dash-grid">
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <h3>Recent Sessions</h3>
+                    <a href="/Training" class="btn-link">View all</a>
+                </div>
+                <div id="recent-sessions"></div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <h3>Active Program</h3>
+                    <a href="/Training"><button class="btn-link">Manage</button></a>
+                </div>
+                <div id="active-program"></div>
+            </div>
+        </div>
+    </div>
+</div>

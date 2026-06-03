@@ -9,7 +9,14 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy =
+            System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
+
+builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 
 // SQLite
@@ -71,6 +78,11 @@ using (var scope = app.Services.CreateScope())
 
     var quoteRepo = scope.ServiceProvider.GetRequiredService<IQuoteRepository>();
     await quoteRepo.SeedAsync();
+
+    var exerciseSeed = new HitTrackerAPI.Repositories.ExerciseSeedService(db);
+    await exerciseSeed.SeedAsync(
+        Path.Combine(builder.Environment.ContentRootPath, "exercises_data")
+    );
 }
 
 // Scalar
@@ -80,10 +92,19 @@ app.MapScalarApiReference(options =>
     options.Title = "HIT Tracker API";
 });
 
-
 app.UseCors("AllowFrontend");
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "exercises_data")
+    ),
+    RequestPath = "/exercise-images"
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapRazorPages();
 app.MapControllers();
 
 app.Run();

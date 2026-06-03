@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIT Tracker</title>
+    <link rel="stylesheet" href="/css/site.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<nav id="navbar" class="hidden">
+    <div class="nav-brand">
+        <i data-lucide="zap"></i> HIT Tracker
+    </div>
+    <div class="nav-links">
+        <a href="/"><button data-view="dashboard">
+            <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+        </button></a>
+        <a href="/Exercises"><button data-view="exercises">
+            <i data-lucide="dumbbell"></i><span>Exercises</span>
+        </button></a>
+        <a href="/Training"><button data-view="training">
+            <i data-lucide="calendar-days"></i><span>Training</span>
+        </button></a>
+        <a href="/AI"><button data-view="ai-suggestion">
+            <i data-lucide="bot"></i><span>AI Coach</span>
+        </button></a>
+        <button class="btn-logout" onclick="logout()">
+            <i data-lucide="log-out"></i><span>Logout</span>
+        </button>
+    </div>
+</nav>
+
+@RenderBody()
+
+<div id="confirm-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="confirmCancel()"></div>
+    <div class="modal-box" style="max-width:380px">
+        <div class="modal-content-body" style="padding:28px">
+            <h3 id="confirm-title" style="margin-bottom:10px;font-size:1.05rem"></h3>
+            <p id="confirm-message" style="color:var(--text-2);font-size:0.88rem;margin-bottom:24px"></p>
+            <div style="display:flex;gap:10px;justify-content:flex-end">
+                <button class="btn-secondary" onclick="confirmCancel()">Cancel</button>
+                <button id="confirm-ok-btn" onclick="confirmOk()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/onboarding.js"></script>
+<script src="/js/dashboard.js"></script>
+<script src="/js/exercises.js"></script>
+<script src="/js/training.js"></script>
+<script src="/js/ai.js"></script>
+<script src="/js/app.js"></script>
+
+@RenderSection("Scripts", required: false)
+
+<script>lucide.createIcons()</script>
+</body>
+</html>

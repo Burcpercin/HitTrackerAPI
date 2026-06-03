@@ -1,0 +1,82 @@
+@page
+@model HitTrackerAPI.Pages.AI.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "AI Coach";
+}
+
+<div id="ai-suggestion-view" class="view">
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1><i data-lucide="bot"></i> AI Coach</h1>
+                <small>Powered by Gemini — Mentzer style</small>
+            </div>
+        </div>
+        <div class="form-card">
+            <div class="form-group">
+                <label>Select Your Training Days</label>
+                <div class="day-picker">
+                    <button class="day-btn" data-day="1" onclick="toggleDay(this)">Mon</button>
+                    <button class="day-btn" data-day="2" onclick="toggleDay(this)">Tue</button>
+                    <button class="day-btn" data-day="3" onclick="toggleDay(this)">Wed</button>
+                    <button class="day-btn" data-day="4" onclick="toggleDay(this)">Thu</button>
+                    <button class="day-btn" data-day="5" onclick="toggleDay(this)">Fri</button>
+                    <button class="day-btn" data-day="6" onclick="toggleDay(this)">Sat</button>
+                    <button class="day-btn" data-day="7" onclick="toggleDay(this)">Sun</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Goal</label>
+                <select id="ai-goal">
+                    <option value="muscle_gain">Build Muscle</option>
+                    <option value="fat_loss">Burn Fat</option>
+                    <option value="weight_loss">Lose Weight</option>
+                    <option value="strength">Get Stronger</option>
+                    <option value="endurance">Endurance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Experience Level</label>
+                <div class="choice-grid">
+                    <button class="choice-card" onclick="selectChoice('ai_exp','beginner',this)">
+                        <i data-lucide="sprout"></i><span>Beginner</span>
+                    </button>
+                    <button class="choice-card" onclick="selectChoice('ai_exp','intermediate',this)">
+                        <i data-lucide="trending-up"></i><span>Intermediate</span>
+                    </button>
+                    <button class="choice-card" onclick="selectChoice('ai_exp','advanced',this)">
+                        <i data-lucide="zap"></i><span>Advanced</span>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Equipment</label>
+                <div class="choice-grid">
+                    <button class="choice-card" onclick="selectChoice('ai_eq','gym',this)">
+                        <i data-lucide="building-2"></i><span>Gym</span>
+                    </button>
+                    <button class="choice-card" onclick="selectChoice('ai_eq','home',this)">
+                        <i data-lucide="home"></i><span>Home</span>
+                    </button>
+                    <button class="choice-card" onclick="selectChoice('ai_eq','both',this)">
+                        <i data-lucide="layers"></i><span>Both</span>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Injuries / Limitations (optional)</label>
+                <textarea id="ai-injuries" placeholder="e.g. Lower back pain..." maxlength="300"></textarea>
+            </div>
+            <div id="ai-error" class="error-msg hidden"></div>
+            <button class="btn-primary full-width" onclick="getAISuggestion()" id="ai-generate-btn">
+                <i data-lucide="sparkles"></i> Generate My Program
+            </button>
+        </div>
+
+        <div id="ai-result" class="form-card hidden" style="margin-top:24px">
+            <h3>Your Personalized HIT Program</h3>
+            <div id="ai-response-text" style="line-height:1.7;color:var(--text-2);font-size:0.92rem;margin-top:16px"></div>
+        </div>
+    </div>
+</div>

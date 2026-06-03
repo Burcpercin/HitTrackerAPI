@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace HitTrackerAPI.Models
 {
     public class WorkoutProgram
@@ -8,11 +10,12 @@ namespace HitTrackerAPI.Models
         public string? Description { get; set; }
         public string Goal { get; set; } = string.Empty;
         public int DaysPerWeek { get; set; }
-        public bool IsActive { get; set; } = false;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        // Navigation
-        public User User { get; set; } = null!;
-        public ICollection<ProgramExercise> Exercises { get; set; } = new List<ProgramExercise>();
+        [JsonIgnore]
+        public User? User { get; set; }
+
+        public List<ProgramExercise> Exercises { get; set; } = new();
     }
 }

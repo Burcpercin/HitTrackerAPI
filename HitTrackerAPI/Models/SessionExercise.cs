@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace HitTrackerAPI.Models
 {
     public class SessionExercise
@@ -10,7 +12,9 @@ namespace HitTrackerAPI.Models
         public bool ReachedFailure { get; set; } = false;
 
         // Navigation
+        [JsonIgnore]
         public WorkoutSession Session { get; set; } = null!;
+        
         public Exercise Exercise { get; set; } = null!;
     }
 }

@@ -1,0 +1,70 @@
+@page
+@model HitTrackerAPI.Pages.Programs.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Programs";
+}
+
+<div id="training-view" class="view">
+    <div class="container">
+        <div class="training-tabs">
+            <button class="t-tab active" onclick="switchTrainingTab('programs',this)">
+                <i data-lucide="clipboard-list"></i> Programs
+            </button>
+            <button class="t-tab" onclick="switchTrainingTab('workout',this)">
+                <i data-lucide="play-circle"></i> Workout
+            </button>
+        </div>
+        <div id="tab-programs" class="t-content">
+            <div class="page-header" style="margin-top:24px">
+                <h2>My Programs</h2>
+                <button class="btn-primary" onclick="toggleForm('program-form')">
+                    <i data-lucide="plus"></i> New
+                </button>
+            </div>
+            <div id="program-form" class="form-card hidden">
+                <h3>New Program</h3>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="prog-name" placeholder="Heavy Duty Split">
+                </div>
+                <div id="program-form-error" class="error-msg hidden"></div>
+                <div class="form-buttons">
+                    <button class="btn-primary" onclick="createProgram()">
+                        <i data-lucide="save"></i> Save
+                    </button>
+                    <button class="btn-secondary" onclick="toggleForm('program-form')">Cancel</button>
+                </div>
+            </div>
+            <div id="program-list"></div>
+        </div>
+        <div id="tab-workout" class="t-content hidden">
+            <div id="workout-start" style="margin-top:24px">
+                <div id="active-prog-info" class="form-card"></div>
+            </div>
+            <div id="active-workout" class="hidden" style="margin-top:24px">
+                <div class="form-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                        <div>
+                            <h3 id="workout-title" style="margin-bottom:4px"></h3>
+                            <p id="workout-date" style="color:var(--text-3);font-size:0.85rem"></p>
+                        </div>
+                        <button class="btn-ghost-danger" onclick="cancelWorkout()">
+                            <i data-lucide="x"></i> Cancel
+                        </button>
+                    </div>
+                    <div id="workout-exercises"></div>
+                    <button class="btn-finish" onclick="finishWorkout()">
+                        <i data-lucide="check-circle-2"></i> Finish Workout
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top:32px">
+                <p style="font-size:0.75rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:16px">
+                    Recent Workouts
+                </p>
+                <div id="history-list"></div>
+            </div>
+        </div>
+    </div>
+</div>

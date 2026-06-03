@@ -1,0 +1,62 @@
+@page
+@model HitTrackerAPI.Pages.Exercises.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Exercises";
+}
+
+<div id="exercises-view" class="view">
+    <div class="container">
+        <div class="page-header">
+            <h1>Exercises</h1>
+            <button class="btn-primary" onclick="toggleForm('exercise-form')">
+                <i data-lucide="plus"></i> Add Custom
+            </button>
+        </div>
+        <div class="filter-row" id="muscle-filters"></div>
+        <div class="search-wrap">
+            <i data-lucide="search"></i>
+            <input type="text" id="exercise-search" placeholder="Search exercises..." oninput="applyFilters()">
+        </div>
+        <div id="exercise-form" class="form-card hidden">
+            <h3>Add Custom Exercise</h3>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="ex-name" placeholder="e.g. My Special Curl">
+            </div>
+            <div class="form-group">
+                <label>Muscle Group</label>
+                <select id="ex-muscle">
+                    <option value="">Select...</option>
+                    <option>Chest</option><option>Back</option><option>Shoulders</option>
+                    <option>Biceps</option><option>Triceps</option><option>Quadriceps</option>
+                    <option>Hamstrings</option><option>Glutes</option><option>Calves</option>
+                    <option>Abs</option><option>Traps</option><option>Forearms</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description (optional)</label>
+                <textarea id="ex-desc" placeholder="How to perform..." maxlength="1000"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Rest Days (min 3)</label>
+                <input type="number" id="ex-rest" value="5" min="3" max="14">
+            </div>
+            <div id="exercise-form-error" class="error-msg hidden"></div>
+            <div class="form-buttons">
+                <button class="btn-primary" id="ex-save-btn" onclick="createExercise()">
+                    <i data-lucide="save"></i> Save
+                </button>
+                <button class="btn-secondary" onclick="cancelExForm()">Cancel</button>
+            </div>
+        </div>
+        <div id="exercise-list" class="exercise-grid"></div>
+        <div id="exercise-modal" class="modal hidden">
+            <div class="modal-backdrop" onclick="closeModal()"></div>
+            <div class="modal-box">
+                <button class="modal-close-btn" onclick="closeModal()"><i data-lucide="x"></i></button>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+    </div>
+</div>
